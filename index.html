@@ -6,11 +6,12 @@
 <style>:root{color-scheme:light}body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
 <title>ECD Centre Register</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>:root{color-scheme:light}body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
+<title>ECD Centre Register</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 <style>
 /* Layout: sticky header with tabs and one shared filter bar; Overview (KPIs, bar lists, demographics, nearby map), Centres (table + detail), Capture (form). */
-:root{--bg:#f9f9f7;--surface:#fcfcfb;--ink:#0b0b0b;--ink2:#52514e;--muted:#6b6964;--grid:#e1e0d9;--line:#c3c2b7;--accent:#256abf;--accent-ink:#fff;--good:#0ca30c;--warn:#fab219;--crit:#d03b3b;--c1:#2a78d6;--c2:#eb6834;--c3:#1baf7a;--c4:#eda100;--c5:#e87ba4;--p-high:#104281;--p-med:#2a78d6;--p-low:#86b6ef;--wash:rgba(11,11,11,.05);--font:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d0d0d;--surface:#1a1a19;--ink:#f0efec;--ink2:#c3c2b7;--muted:#9a9890;--grid:#2c2c2a;--line:#383835;--accent:#3987e5;--c1:#3987e5;--c2:#d95926;--c3:#199e70;--c4:#c98500;--c5:#d55181;--p-high:#9ec5f4;--p-med:#3987e5;--p-low:#1c5cab;--wash:rgba(255,255,255,.06);color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#0d0d0d;--surface:#1a1a19;--ink:#f0efec;--ink2:#c3c2b7;--muted:#9a9890;--grid:#2c2c2a;--line:#383835;--accent:#3987e5;--c1:#3987e5;--c2:#d95926;--c3:#199e70;--c4:#c98500;--c5:#d55181;--p-high:#9ec5f4;--p-med:#3987e5;--p-low:#1c5cab;--wash:rgba(255,255,255,.06);color-scheme:dark}
+:root{color-scheme:light;--bg:#f9f9f7;--surface:#fcfcfb;--ink:#0b0b0b;--ink2:#52514e;--muted:#6b6964;--grid:#e1e0d9;--line:#c3c2b7;--accent:#256abf;--accent-ink:#fff;--good:#0ca30c;--warn:#fab219;--crit:#d03b3b;--c1:#2a78d6;--c2:#eb6834;--c3:#1baf7a;--c4:#eda100;--c5:#e87ba4;--p-high:#104281;--p-med:#2a78d6;--p-low:#86b6ef;--wash:rgba(11,11,11,.05);--font:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:14px;line-height:1.45}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--surface);z-index:10}
@@ -49,8 +50,6 @@ h2{font-size:13px;font-weight:600;margin:0 0 2px}
 .pill.g i{color:var(--good)}.pill.w i{color:var(--warn)}.pill.c i{color:var(--crit)}
 .pr{font-size:12px;font-weight:600;padding:1px 8px;border-radius:4px;color:#fff;white-space:nowrap}
 .pr.High{background:var(--p-high)}.pr.Medium{background:var(--p-med)}.pr.Low{background:var(--p-low);color:#0b0b0b}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .pr.High{color:#0b0b0b}}
-:root[data-theme="dark"] .pr.High{color:#0b0b0b}
 .seg{display:inline-flex;border:1px solid var(--line);border-radius:4px;overflow:hidden;margin-bottom:10px}
 .seg button{font:inherit;font-size:12px;background:none;border:0;color:var(--ink2);padding:5px 12px;cursor:pointer}
 .seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
