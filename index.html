@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light}body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
+<title>ECD Centre Register</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: sticky header with tabs and one shared filter bar; Overview (KPIs, bar lists, demographics, nearby map), Centres (table + detail), Capture (form). */
+:root{--bg:#f9f9f7;--surface:#fcfcfb;--ink:#0b0b0b;--ink2:#52514e;--muted:#6b6964;--grid:#e1e0d9;--line:#c3c2b7;--accent:#256abf;--accent-ink:#fff;--good:#0ca30c;--warn:#fab219;--crit:#d03b3b;--c1:#2a78d6;--c2:#eb6834;--c3:#1baf7a;--c4:#eda100;--c5:#e87ba4;--p-high:#104281;--p-med:#2a78d6;--p-low:#86b6ef;--wash:rgba(11,11,11,.05);--font:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d0d0d;--surface:#1a1a19;--ink:#f0efec;--ink2:#c3c2b7;--muted:#9a9890;--grid:#2c2c2a;--line:#383835;--accent:#3987e5;--c1:#3987e5;--c2:#d95926;--c3:#199e70;--c4:#c98500;--c5:#d55181;--p-high:#9ec5f4;--p-med:#3987e5;--p-low:#1c5cab;--wash:rgba(255,255,255,.06);color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0d0d0d;--surface:#1a1a19;--ink:#f0efec;--ink2:#c3c2b7;--muted:#9a9890;--grid:#2c2c2a;--line:#383835;--accent:#3987e5;--c1:#3987e5;--c2:#d95926;--c3:#199e70;--c4:#c98500;--c5:#d55181;--p-high:#9ec5f4;--p-med:#3987e5;--p-low:#1c5cab;--wash:rgba(255,255,255,.06);color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:14px;line-height:1.45}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--surface);z-index:10}
+.in{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--surface);border-bottom:1px solid var(--grid)}
+.top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 16px;padding-block:12px 0}
+h1{font-size:18px;font-weight:700;margin:0;letter-spacing:-.01em}
+.sub{color:var(--muted);font-size:12px}
+.badge{font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;border:1px solid var(--line);color:var(--ink2);padding:2px 8px;border-radius:4px}
+nav{display:flex;gap:4px;margin-top:8px;overflow-x:auto}
+nav a{padding:8px 12px;color:var(--ink2);text-decoration:none;font-weight:500;border-bottom:2px solid transparent;white-space:nowrap}
+nav a[aria-current="page"]{color:var(--ink);border-bottom-color:var(--accent)}
+nav a:hover{background:var(--wash)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.filters{display:flex;flex-wrap:wrap;gap:8px;padding-block:12px}
+label.f{display:flex;flex-direction:column;gap:2px;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);min-width:0}
+select,input[type=text],input[type=number]{font:inherit;font-size:13px;text-transform:none;letter-spacing:0;font-weight:400;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:6px 8px;min-width:0;max-width:100%}
+main{padding-block:16px 48px}
+section[hidden]{display:none}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.card{background:var(--surface);border:1px solid var(--grid);border-radius:6px;padding:14px 16px;min-width:0}
+.kpi b{display:block;font-size:26px;font-weight:700;letter-spacing:-.02em;line-height:1.1}
+.kpi span{color:var(--muted);font-size:12px}
+.grid{display:grid;gap:12px;margin-top:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr))}
+.grid.two{grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr))}
+h2{font-size:13px;font-weight:600;margin:0 0 2px}
+.note{color:var(--muted);font-size:12px;margin:0 0 12px}
+.bl{display:grid;grid-template-columns:minmax(90px,130px) 1fr auto;align-items:center;gap:6px 10px;font-size:13px}
+.bl .t{height:10px;background:var(--wash);border-radius:0 4px 4px 0}
+.bl .t i{display:block;height:100%;border-radius:0 4px 4px 0;min-width:2px}
+.bl .v{font-variant-numeric:tabular-nums;color:var(--ink2);min-width:44px;text-align:right}
+.bl button{all:unset;cursor:pointer;color:var(--ink);padding:2px 0}
+.bl button:hover{text-decoration:underline}
+.pill{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:500;padding:1px 8px;border-radius:10px;border:1px solid var(--line);white-space:nowrap}
+.pill i{font-style:normal;font-size:10px}
+.pill.g i{color:var(--good)}.pill.w i{color:var(--warn)}.pill.c i{color:var(--crit)}
+.pr{font-size:12px;font-weight:600;padding:1px 8px;border-radius:4px;color:#fff;white-space:nowrap}
+.pr.High{background:var(--p-high)}.pr.Medium{background:var(--p-med)}.pr.Low{background:var(--p-low);color:#0b0b0b}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .pr.High{color:#0b0b0b}}
+:root[data-theme="dark"] .pr.High{color:#0b0b0b}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:4px;overflow:hidden;margin-bottom:10px}
+.seg button{font:inherit;font-size:12px;background:none;border:0;color:var(--ink2);padding:5px 12px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.lg{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12px;color:var(--ink2);margin-bottom:10px}
+.lg span{display:inline-flex;align-items:center;gap:5px}
+.sw{width:10px;height:10px;border-radius:2px;display:inline-block}
+.dg{display:grid;grid-template-columns:80px 1fr;gap:10px 10px;align-items:center;font-size:13px}
+.dg .pair{display:grid;gap:3px}
+.dg .row{display:grid;grid-template-columns:1fr 44px;gap:8px;align-items:center}
+.dg .t{height:8px}.dg .t i{display:block;height:100%;border-radius:0 3px 3px 0;min-width:2px}
+.dg .v{font-size:12px;color:var(--ink2);text-align:right;font-variant-numeric:tabular-nums}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th{text-align:left;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:8px 10px;border-bottom:1px solid var(--grid);white-space:nowrap}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+tbody tr{cursor:pointer}tbody tr:hover{background:var(--wash)}
+tbody tr[aria-selected="true"]{background:var(--wash);box-shadow:inset 3px 0 0 var(--accent)}
+#map{width:100%;max-width:420px;height:auto;display:block;background:var(--bg);border:1px solid var(--grid);border-radius:4px;cursor:crosshair}
+.ctl{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin-bottom:10px;font-size:13px}
+input[type=range]{accent-color:var(--accent)}
+.near{max-height:210px;overflow:auto;margin-top:10px;font-size:13px}
+.near div{display:flex;justify-content:space-between;gap:8px;padding:4px 0;border-bottom:1px solid var(--grid)}
+.fg{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.mx{display:grid;grid-template-columns:90px repeat(2,minmax(0,1fr));gap:6px;align-items:center;font-size:13px;max-width:360px}
+.mx input{width:100%}
+.btn{font:inherit;font-weight:600;background:var(--accent);color:var(--accent-ink);border:0;border-radius:4px;padding:9px 16px;cursor:pointer}
+.btn.alt{background:none;color:var(--ink);border:1px solid var(--line)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:6px;font-size:13px;z-index:20;max-width:calc(100% - 32px)}
+.empty{color:var(--muted);padding:16px 0}
+.cols{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))}
+.rule{font-size:12px;color:var(--ink2);background:var(--wash);border-radius:4px;padding:8px 10px;margin-top:12px}
+</style>
+</head>
+<body>
+<header>
+<div class="in">
+<div class="top">
+<div><h1>ECD Centre Register</h1><div class="sub">Early childhood development centres, Gauteng</div></div>
+<span class="badge">Demo, sample data</span>
+</div>
+<nav aria-label="Views"><a href="#overview" data-tab="overview">Overview</a><a href="#centres" data-tab="centres">Centres</a><a href="#capture" data-tab="capture">Capture</a></nav>
+<div class="filters" id="filters">
+<label class="f">Area<select id="fArea"></select></label>
+<label class="f">Registration<select id="fReg"><option value="">All</option><option value="R">Registered</option><option value="P">Partially registered</option><option value="N">Not registered</option></select></label>
+<label class="f">Funding<select id="fFund"><option value="">All</option><option value="1">Government funded</option><option value="0">Not funded</option></select></label>
+<label class="f">Priority<select id="fPri"><option value="">All</option><option>High</option><option>Medium</option><option>Low</option></select></label>
+<label class="f">Search<input type="text" id="fQ" placeholder="Centre name"></label>
+<label class="f">&nbsp;<button class="btn alt" id="fClear" type="button">Clear</button></label>
+</div>
+</div>
+</header>
+<main class="in">
+
+<section id="overview">
+<div class="kpis" id="kpis"></div>
+<div class="grid">
+<div class="card"><h2>Registration status</h2><p class="note">Click a row to filter.</p><div class="bl" id="bReg"></div></div>
+<div class="card"><h2>Government funding</h2><p class="note">Centres receiving a subsidy.</p><div class="bl" id="bFund"></div></div>
+<div class="card"><h2>Priority</h2><p class="note">Calculated from the rule below.</p><div class="bl" id="bPri"></div><div class="rule" id="rule"></div></div>
+</div>
+<div class="grid two">
+<div class="card"><h2>People by race and gender</h2><p class="note">Totals across the centres shown.</p>
+<div class="seg" role="group" aria-label="Group"><button type="button" data-g="children" aria-pressed="true">Children</button><button type="button" data-g="staff" aria-pressed="false">Staff</button></div>
+<div class="lg"><span><i class="sw" style="background:var(--c1)"></i>Female</span><span><i class="sw" style="background:var(--c2)"></i>Male</span></div>
+<div class="dg" id="demo"></div></div>
+<div class="card"><h2>Staff by role</h2><p class="note">Headcount across the centres shown.</p><div class="bl" id="bRole"></div></div>
+</div>
+<div class="card" style="margin-top:12px"><h2>Centres nearby</h2><p class="note">Click the map to set a location, then adjust the radius. Distances are straight-line.</p>
+<div class="ctl"><label>Radius <input type="range" id="rad" min="2" max="40" value="15"> <b id="radV">15 km</b></label><span id="origin" class="sub"></span></div>
+<div class="cols"><div><svg id="map" viewBox="0 0 360 520" role="img" aria-label="Map of centres"></svg>
+<div class="lg" style="margin-top:8px"><span>● Registered</span><span>◆ Partially registered</span><span>▲ Not registered</span><span><i class="sw" style="border:2px solid var(--ink);border-radius:50%;width:12px;height:12px"></i>Search radius</span></div></div>
+<div><b id="nearCount"></b><div class="near" id="near"></div></div></div></div>
+</section>
+
+<section id="centres" hidden>
+<div class="card"><div class="tw"><table><thead><tr><th>Centre</th><th>Area</th><th>Registration</th><th>Funding</th><th>Priority</th><th class="n">Children</th><th class="n">Staff</th></tr></thead><tbody id="tb"></tbody></table></div><div id="tbEmpty" class="empty" hidden>No centres match these filters.</div></div>
+<div class="card" id="detail" style="margin-top:12px"></div>
+</section>
+
+<section id="capture" hidden>
+<form class="card" id="form" novalidate>
+<h2>Capture a centre</h2><p class="note">This form adds a centre to the demo in this browser only. Counts are totals, not individual records.</p>
+<div class="fg">
+<label class="f">Centre name<input type="text" id="cName" placeholder="e.g. Little Stars ECD"></label>
+<label class="f">Area<select id="cArea"></select></label>
+<label class="f">Registration<select id="cReg"><option value="R">Registered</option><option value="P">Partially registered</option><option value="N" selected>Not registered</option></select></label>
+<label class="f">Government funded<select id="cFund"><option value="0">No</option><option value="1">Yes</option></select></label>
+</div>
+<div class="cols" style="margin-top:16px"><div><h2>Children by race and gender</h2><div class="mx" id="cKids"></div></div>
+<div><h2>Staff by role</h2><div class="mx" id="cRoles" style="grid-template-columns:110px minmax(0,1fr)"></div></div></div>
+<p id="cErr" class="note" style="color:var(--crit);margin-top:12px" hidden></p>
+<div style="margin-top:16px;display:flex;gap:8px"><button class="btn" type="submit">Save centre</button><button class="btn alt" type="button" id="cReset">Reset</button></div>
+</form>
+</section>
+</main>
+<div class="toast" id="toast" hidden></div>
+<script>
+var RACES=['African','Coloured','Indian','White','Other'];
+var ROLES=['Principal','Practitioner','Cook','Cleaner','Gardener','Security'];
+var REG={R:{t:'Registered',c:'g',s:'●',m:'circle'},P:{t:'Partially registered',c:'w',s:'◆',m:'diamond'},N:{t:'Not registered',c:'c',s:'▲',m:'tri'}};
+var AREAS={'Soweto':[-26.267,27.858],'Alexandra':[-26.103,28.097],'Diepsloot':[-25.935,28.011],'Tembisa':[-25.998,28.227],'Orange Farm':[-26.466,27.855],'Mamelodi':[-25.71,28.39]};
+var RULE='Priority score: not registered +3, partially registered +2, not government funded +2, 60 or more children +1. High is 5 or more, Medium is 3 or 4, Low is 2 or less.';
+function mulberry(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function priority(c){var s=(c.reg==='N'?3:c.reg==='P'?2:0)+(c.funded?0:2)+(sum(c.kids)>=60?1:0);return s>=5?'High':s>=3?'Medium':'Low'}
+function sum(m){var t=0;for(var r in m){t+=m[r].F+m[r].M}return t}
+function blank(){var m={};RACES.forEach(function(r){m[r]={F:0,M:0}});return m}
+function pick(rnd,w){var x=rnd()*w.reduce(function(a,b){return a+b},0);for(var i=0;i<w.length;i++){x-=w[i];if(x<0)return i}return w.length-1}
+function build(){
+var rnd=mulberry(2026),out=[],n=0;
+var A=['Little Stars','Bright Beginnings','Sunshine','Ubuntu','Tiny Steps','Rainbow','Hope','Kgotso','Thuto','Lerato','Mpho','Siyakhula','Ikageng','Masibambane','Funanani','Bokamoso','Happy Hearts','Jabulani','Khanya','Sizanani','Tsholofelo','Vukuzenzele','Reabetswe','Nokuthula'];
+var B=['ECD Centre','Day Care','Creche','Early Learning'];
+Object.keys(AREAS).forEach(function(area){
+for(var i=0;i<8;i++){
+var c={id:++n,name:A[(n*5+i)%A.length]+' '+B[Math.floor(rnd()*B.length)],area:area,lat:AREAS[area][0]+(rnd()-.5)*.09,lng:AREAS[area][1]+(rnd()-.5)*.09};
+c.reg=['R','P','N'][pick(rnd,[5,3,2])];
+c.funded=rnd()<(c.reg==='R'?.7:c.reg==='P'?.4:.12);
+var total=18+Math.floor(rnd()*80);c.kids=blank();
+for(var k=0;k<total;k++){var r=RACES[pick(rnd,area==='Orange Farm'||area==='Soweto'?[90,6,1,1,2]:[84,6,3,3,4])];c.kids[r][rnd()<.5?'F':'M']++}
+c.roles={Principal:1,Practitioner:Math.max(1,Math.round(total/18)),Cook:1,Cleaner:rnd()<.6?1:0,Gardener:rnd()<.4?1+Math.floor(rnd()*2):0,Security:rnd()<.3?1:0};
+var staff=0;for(var q in c.roles)staff+=c.roles[q];c.staff=blank();
+for(var s=0;s<staff;s++){c.staff[RACES[pick(rnd,[88,6,2,2,2])]][rnd()<.82?'F':'M']++}
+out.push(c)}});
+return out}
+var DATA=build();
+</script>
+<script>
+var $=function(i){return document.getElementById(i)};
+var S={g:'children',sel:null,o:{lat:-26.2041,lng:28.0473},rad:15};
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function km(a,b,c,d){var p=Math.PI/180,x=(c-a)*p,y=(d-b)*p,h=Math.sin(x/2)*Math.sin(x/2)+Math.cos(a*p)*Math.cos(c*p)*Math.sin(y/2)*Math.sin(y/2);return 12742*Math.asin(Math.sqrt(h))}
+function filtered(){var a=$('fArea').value,r=$('fReg').value,f=$('fFund').value,p=$('fPri').value,q=$('fQ').value.trim().toLowerCase();
+return DATA.filter(function(c){return(!a||c.area===a)&&(!r||c.reg===r)&&(f===''||(c.funded?'1':'0')===f)&&(!p||priority(c)===p)&&(!q||c.name.toLowerCase().indexOf(q)>-1)})}
+function pill(k){var g=REG[k];return '<span class="pill '+g.c+'"><i>'+g.s+'</i>'+g.t+'</span>'}
+function pr(c){var p=priority(c);return '<span class="pr '+p+'">'+p+'</span>'}
+function bars(el,rows,max){
+el.innerHTML=rows.map(function(r,i){var lab=r.on?'<button type="button" data-i="'+i+'">'+r.label+'</button>':'<span>'+r.label+'</span>';
+return lab+'<div class="t"><i style="width:'+(max?r.v/max*100:0)+'%;background:'+r.color+'"></i></div><span class="v">'+r.v+(r.pct!=null?' · '+r.pct+'%':'')+'</span>'}).join('');
+el.querySelectorAll('button').forEach(function(b){b.onclick=rows[+b.dataset.i].on})}
+function setF(id,v){$(id).value=v;renderAll()}
+function pc(n,t){return t?Math.round(n/t*100):0}
+function renderOverview(list){
+var n=list.length,cnt=function(f){return list.filter(f).length};
+var reg={R:cnt(function(c){return c.reg==='R'}),P:cnt(function(c){return c.reg==='P'}),N:cnt(function(c){return c.reg==='N'})};
+var fu=cnt(function(c){return c.funded}),hi=cnt(function(c){return priority(c)==='High'}),pm=cnt(function(c){return priority(c)==='Medium'});
+var kids=0,staff=0;list.forEach(function(c){kids+=sum(c.kids);staff+=sum(c.staff)});
+var K=[[n,'Centres shown'],[pc(reg.R,n)+'%','Fully registered'],[fu,'Government funded'],[hi,'High priority'],[kids.toLocaleString('en-ZA'),'Children'],[staff,'Staff']];
+$('kpis').innerHTML=K.map(function(k){return '<div class="card kpi"><b>'+k[0]+'</b><span>'+k[1]+'</span></div>'}).join('');
+bars($('bReg'),['R','P','N'].map(function(k){return{label:REG[k].s+' '+REG[k].t,v:reg[k],pct:pc(reg[k],n),color:k==='R'?'var(--good)':k==='P'?'var(--warn)':'var(--crit)',on:function(){setF('fReg',k)}}}),n);
+bars($('bFund'),[{label:'Government funded',v:fu,pct:pc(fu,n),color:'var(--c1)',on:function(){setF('fFund','1')}},{label:'Not funded',v:n-fu,pct:pc(n-fu,n),color:'var(--c2)',on:function(){setF('fFund','0')}}],n);
+bars($('bPri'),[['High',hi,'var(--p-high)'],['Medium',pm,'var(--p-med)'],['Low',n-hi-pm,'var(--p-low)']].map(function(r){return{label:r[0],v:r[1],pct:pc(r[1],n),color:r[2],on:function(){setF('fPri',r[0])}}}),n);
+$('rule').textContent=RULE;
+var agg=blank(),mx=1;list.forEach(function(c){RACES.forEach(function(r){agg[r].F+=c[S.g][r].F;agg[r].M+=c[S.g][r].M})});
+RACES.forEach(function(r){mx=Math.max(mx,agg[r].F,agg[r].M)});
+$('demo').innerHTML=RACES.map(function(r){var row=function(v,col){return '<div class="row"><div class="t"><i style="width:'+v/mx*100+'%;background:'+col+'"></i></div><span class="v">'+v+'</span></div>'};
+return '<span>'+r+'</span><div class="pair">'+row(agg[r].F,'var(--c1)')+row(agg[r].M,'var(--c2)')+'</div>'}).join('');
+var rl={},rm=1;ROLES.forEach(function(r){rl[r]=0});list.forEach(function(c){ROLES.forEach(function(r){rl[r]+=c.roles[r]||0})});ROLES.forEach(function(r){rm=Math.max(rm,rl[r])});
+bars($('bRole'),ROLES.map(function(r){return{label:{Principal:'Principals',Practitioner:'Practitioners',Cook:'Cooks',Cleaner:'Cleaners',Gardener:'Gardeners',Security:'Security guards'}[r],v:rl[r],color:'var(--c3)'}}),rm);
+renderMap(list)}
+var X=function(lng){return 14+(lng-27.74)*459.8},Y=function(lat){return 10+(-25.62-lat)*510.6};
+function mark(c,x,y,op){var col=c.reg==='R'?'var(--good)':c.reg==='P'?'var(--warn)':'var(--crit)',a=' fill="'+col+'" stroke="var(--surface)" stroke-width="1.5" opacity="'+op+'"';
+var t='<title>'+esc(c.name)+', '+REG[c.reg].t+'</title>';
+if(c.reg==='R')return '<circle cx="'+x+'" cy="'+y+'" r="5.5"'+a+'>'+t+'</circle>';
+if(c.reg==='P')return '<polygon points="'+x+','+(y-7)+' '+(x+6)+','+y+' '+x+','+(y+7)+' '+(x-6)+','+y+'"'+a+'>'+t+'</polygon>';
+return '<polygon points="'+x+','+(y-6.5)+' '+(x+6.5)+','+(y+5)+' '+(x-6.5)+','+(y+5)+'"'+a+'>'+t+'</polygon>'}
+function renderMap(list){
+var ox=X(S.o.lng),oy=Y(S.o.lat),h='',near=[];
+Object.keys(AREAS).forEach(function(a){h+='<text x="'+X(AREAS[a][1])+'" y="'+(Y(AREAS[a][0])-26)+'" text-anchor="middle" font-size="11" fill="var(--muted)">'+a+'</text>'});
+h+='<circle cx="'+ox+'" cy="'+oy+'" r="'+S.rad*4.6+'" fill="var(--wash)" stroke="var(--ink)" stroke-width="1.5" stroke-dasharray="4 3"/>';
+list.forEach(function(c){var d=km(S.o.lat,S.o.lng,c.lat,c.lng),inn=d<=S.rad;if(inn)near.push([c,d]);h+=mark(c,X(c.lng),Y(c.lat),inn?1:.35)});
+h+='<path d="M'+(ox-8)+' '+oy+'H'+(ox+8)+'M'+ox+' '+(oy-8)+'V'+(oy+8)+'" stroke="var(--ink)" stroke-width="2"/>';
+$('map').innerHTML=h;
+near.sort(function(a,b){return a[1]-b[1]});
+$('nearCount').textContent=near.length+' of '+list.length+' centres within '+S.rad+' km';
+$('near').innerHTML=near.length?near.map(function(r){return '<div><span>'+esc(r[0].name)+' '+pill(r[0].reg)+'</span><span class="sub">'+r[1].toFixed(1)+' km</span></div>'}).join(''):'<div class="empty">No centres inside this radius. Widen it or move the pin.</div>';
+$('radV').textContent=S.rad+' km';
+var nearest=Object.keys(AREAS).map(function(a){return[a,km(S.o.lat,S.o.lng,AREAS[a][0],AREAS[a][1])]}).sort(function(a,b){return a[1]-b[1]})[0];
+$('origin').textContent='Pin set near '+nearest[0]+' ('+S.o.lat.toFixed(3)+', '+S.o.lng.toFixed(3)+')'}
+</script>
+<script>
+function renderTable(list){
+$('tb').innerHTML=list.map(function(c){return '<tr data-id="'+c.id+'" tabindex="0"'+(S.sel===c.id?' aria-selected="true"':'')+'><td><b>'+esc(c.name)+'</b></td><td>'+c.area+'</td><td>'+pill(c.reg)+'</td><td>'+(c.funded?'Government funded':'Not funded')+'</td><td>'+pr(c)+'</td><td class="n">'+sum(c.kids)+'</td><td class="n">'+sum(c.staff)+'</td></tr>'}).join('');
+$('tbEmpty').hidden=list.length>0;
+$('tb').querySelectorAll('tr').forEach(function(r){var go=function(){S.sel=+r.dataset.id;renderTable(filtered());renderDetail()};r.onclick=go;r.onkeydown=function(e){if(e.key==='Enter')go()}})}
+function matrix(m){return '<table><thead><tr><th>Race</th><th class="n">Female</th><th class="n">Male</th><th class="n">Total</th></tr></thead><tbody>'+RACES.map(function(r){return '<tr style="cursor:default"><td>'+r+'</td><td class="n">'+m[r].F+'</td><td class="n">'+m[r].M+'</td><td class="n">'+(m[r].F+m[r].M)+'</td></tr>'}).join('')+'</tbody></table>'}
+function renderDetail(){
+var c=DATA.filter(function(x){return x.id===S.sel})[0];
+if(!c){$('detail').innerHTML='<div class="empty">Select a centre above to see its demographics and staff.</div>';return}
+var roles=ROLES.filter(function(r){return c.roles[r]}).map(function(r){return '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--grid)"><span>'+r+'</span><b>'+c.roles[r]+'</b></div>'}).join('');
+$('detail').innerHTML='<h2 style="font-size:16px">'+esc(c.name)+'</h2><p class="note">'+c.area+' · '+pill(c.reg)+' · '+(c.funded?'Government funded':'Not funded')+' · Priority '+pr(c)+'</p>'
++'<div class="cols"><div><h2>Children</h2><div class="tw">'+matrix(c.kids)+'</div></div><div><h2>Staff by race and gender</h2><div class="tw">'+matrix(c.staff)+'</div></div><div><h2>Staff by role</h2>'+roles+'</div></div>'}
+function renderAll(){var l=filtered();renderOverview(l);renderTable(l);renderDetail()}
+function toast(t){var e=$('toast');e.textContent=t;e.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(function(){e.hidden=true},3000)}
+function numIn(id){return '<input type="number" min="0" step="1" value="0" id="'+id+'" aria-label="'+id+'">'}
+function buildForm(){
+$('cKids').innerHTML='<span></span><b>Female</b><b>Male</b>'+RACES.map(function(r,i){return '<span>'+r+'</span>'+numIn('k'+i+'F')+numIn('k'+i+'M')}).join('');
+$('cRoles').innerHTML=ROLES.map(function(r,i){return '<span>'+r+'</span>'+numIn('r'+i)}).join('');
+var d=document.createElement('div');d.innerHTML='<h2>Staff by race and gender</h2><div class="mx" id="cStaff"><span></span><b>Female</b><b>Male</b>'+RACES.map(function(r,i){return '<span>'+r+'</span>'+numIn('s'+i+'F')+numIn('s'+i+'M')}).join('')+'</div>';
+$('cRoles').parentNode.parentNode.appendChild(d)}
+function readM(p){var m=blank();RACES.forEach(function(r,i){m[r].F=Math.max(0,+$(p+i+'F').value||0);m[r].M=Math.max(0,+$(p+i+'M').value||0)});return m}
+function resetForm(){$('form').reset();$('cErr').hidden=true}
+$('form').onsubmit=function(e){e.preventDefault();
+var name=$('cName').value.trim(),roles={},rt=0;ROLES.forEach(function(r,i){roles[r]=Math.max(0,+$('r'+i).value||0);rt+=roles[r]});
+var kids=readM('k'),staff=readM('s'),st=sum(staff),err='';
+if(!name)err='Enter the centre name.';else if(!sum(kids))err='Enter at least one child.';else if(rt!==st)err='Staff by role adds up to '+rt+' but staff by race and gender adds up to '+st+'. Make them match.';
+if(err){$('cErr').textContent=err;$('cErr').hidden=false;return}
+var a=$('cArea').value,c={id:DATA.length+1,name:name,area:a,lat:AREAS[a][0]+(Math.random()-.5)*.06,lng:AREAS[a][1]+(Math.random()-.5)*.06,reg:$('cReg').value,funded:$('cFund').value==='1',kids:kids,roles:roles,staff:staff};
+DATA.push(c);S.sel=c.id;resetForm();renderAll();toast('Saved. '+DATA.length+' centres in the register.');location.hash='#centres'};
+$('cReset').onclick=resetForm;
+function route(){var h=location.hash.slice(1);if(['overview','centres','capture'].indexOf(h)<0)h='overview';
+['overview','centres','capture'].forEach(function(t){$(t).hidden=t!==h});
+document.querySelectorAll('nav a').forEach(function(a){if(a.dataset.tab===h)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
+$('filters').hidden=h==='capture'}
+var keys=Object.keys(AREAS);
+$('fArea').innerHTML='<option value="">All areas</option>'+keys.map(function(k){return '<option>'+k+'</option>'}).join('');
+$('cArea').innerHTML=keys.map(function(k){return '<option>'+k+'</option>'}).join('');
+['fArea','fReg','fFund','fPri'].forEach(function(i){$(i).onchange=renderAll});$('fQ').oninput=renderAll;
+$('fClear').onclick=function(){['fArea','fReg','fFund','fPri','fQ'].forEach(function(i){$(i).value=''});renderAll()};
+document.querySelectorAll('.seg button').forEach(function(b){b.onclick=function(){S.g=b.dataset.g;document.querySelectorAll('.seg button').forEach(function(x){x.setAttribute('aria-pressed',x===b)});renderAll()}});
+$('rad').oninput=function(){S.rad=+this.value;renderMap(filtered())};
+$('map').onclick=function(e){var r=this.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*360,y=(e.clientY-r.top)/r.height*520;
+S.o={lat:-25.62-(y-10)/510.6,lng:27.74+(x-14)/459.8};renderMap(filtered())};
+buildForm();window.addEventListener('hashchange',route);route();renderAll();
+</script>
+</body>
+</html>
